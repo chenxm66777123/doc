@@ -1,0 +1,45 @@
+====================安装====================
+## 安装目录 /data/application/java 可以自己确定安装位置
+## 创建安装目录
+mkdir -p /data/application/java
+
+cd /data/application/java
+
+## 利用wget下载jdk1.8压缩包
+## 没有wget的可先安装wget
+yum -y install wget
+
+## 下载
+wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+
+## 解压
+tar -zxvf jdk-8u131-linux-x64.tar.gz 
+
+## 重命名
+mv jdk1.8.0_131 jdk1.8
+
+
+====================配置环境变量====================
+## 编辑配置文件
+vi /etc/profile
+
+## 在最后添加
+export JAVA_HOME=/data/application/java/jdk1.8
+export PATH=$PATH:$JAVA_HOME/bin
+
+## 让配置文件生效
+source /etc/profile
+
+## 查看是否安装成功
+java -version
+
+
+
+
+
+
+
+
+
+
+

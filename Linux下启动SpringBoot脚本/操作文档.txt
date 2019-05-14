@@ -1,0 +1,3 @@
+./start.sh start 启动
+./start.sh stop  停止
+./start.sh restart 重启启动

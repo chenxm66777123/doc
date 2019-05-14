@@ -1,0 +1,82 @@
+====================安装===================
+//创建文件夹
+[root@iz237fkzl7tz2iz local]# mkdir /usr/local/
+
+[root@iz237fkzl7tz2iz local]# cd /usr/local/
+
+//开始下载
+[root@iz237fkzl7tz2iz mysql]# wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz
+
+[root@iz237fkzl7tz2iz mysql]# tar -xvf mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz
+
+[root@iz237fkzl7tz2iz mysql]# mv mysql-5.7.22-linux-glibc2.12-x86_64 mysql
+
+[root@iz237fkzl7tz2iz mysql-5.7.22]# mkdir data
+
+[root@localhost local]# groupadd mysql
+[root@localhost local]# useradd -g mysql mysql
+
+[root@iz237fkzl7tz2iz local]# chown -R mysql.mysql /usr/local/mysql
+
+[root@iz237fkzl7tz2iz local]# /usr/local/mysql/bin/mysql_install_db --user=mysql --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data
+
+[root@iz237fkzl7tz2iz local]# /usr/local/mysql/bin/mysqld --user=mysql --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data --initializ
+
+[root@iz237fkzl7tz2iz local]# vi /etc/my.cnf
+//编辑
+[mysqld]
+datadir=/usr/local/mysql/data
+basedir=/usr/local/mysql
+socket=/tmp/mysql.sock
+user=mysql
+port=3306
+character-set-server=utf8
+# 取消密码验证
+#skip-grant-tables
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# skip-grant-tables
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+退出保存
+
+[root@iz237fkzl7tz2iz local]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+
+//开机启动
+[root@iz237fkzl7tz2iz local]# chkconfig mysql on
+
+//重启服务
+[root@iz237fkzl7tz2iz local]# service mysql start
+
+//快捷方式配置
+[root@iz237fkzl7tz2iz local]# ln -s /usr/local/mysql/bin/mysql /usr/bin
+
+//已配置无密码进入随意输入可进入
+[root@iz237fkzl7tz2iz local]# mysql -u root -p
+
+//切换数据库
+use mysql;
+
+# 修改密码
+>>update user set authentication_string=password('你的密码') where user='root';
+>>flush privileges;
+>>exit;
+
+将/etc/my.cnf中的skip-grant-tables删除
+
+登录再次设置密码（不知道为啥如果不再次设置密码就操作不了数据库了）
+mysql -u root -p
+>>ALTER USER 'root'@'localhost' IDENTIFIED BY '修改后的密码';
+>>exit;
+
+允许远程连接
+/usr/local/mysql/bin/mysql -u root -p
+>>use mysql;
+
+//开启远程连接 给root用户 %所有IP密码'root' 
+>> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root' WITH GRANT OPTION;
+
+>>flush privileges;
+>>eixt;

@@ -1,0 +1,144 @@
+Maven环境搭建：
+
+本地仓库+maven运行环境+构建项目
+
+1、搭建nexus 本地仓库
+
+1）拷贝jdk1.6和tomcat6
+2）配置端口为8010	（端口自行定义，只要下面各处一致即可）
+3）复制nexus-2.1.2.war到tomcat/webapps下，改名为nexus.war	（这样访问无需加后面的版本号）
+4）启动tomcat6		（最好以服务方式启动，否则电脑关机重启后还需手工启动）
+
+访问： http://localhost:8010/nexus
+
+能访问，搭建nexus成功！
+
+初始用户名 admin 密码 admin123
+
+注意：
+如成功，nexus将在C盘创建C:\sonatype-work\nexus目录，存放文件
+主要文件：C:\sonatype-work\nexus\storage\central
+
+2、搭建maven环境，已执行mvn命令
+
+1）解压apache-maven-3.0.5.zip到D:\javaenv\apache-maven-3.0.5
+2）修改D:\javaenv\apache-maven-3.0.5\bin\mvn.bat
+
+36行附近加 set MAVEN_OPTS = -Xms128m - Xmx512m	（加大内存，构建大型项目会超出内存）
+57行附近加 set JAVA_HOME=D:\\javaenv\\jdk1.6	（无需电脑属性配置JAVA_HOME）
+
+3）配置MAVEN_HOME
+
+电脑属性建立 
+MAVEN_HOME
+D:\javaenv\apache-maven-3.0.5
+
+加入PATH中
+;%MAVEN_HOME%\bin
+
+这样在cmd DOS窗口中就可以执行mvn命令
+
+执行 mvn version 命令
+
+提示正常，则搭建成功
+
+4）执行各个mvn命令，下载各个命令插件	（必须执行，maven将自动下载相关的插件）
+
+包括：compile,test,site,install,
+
+install -X	（X必须大写，控制信息详细很多，将显示jar依赖结构）
+deploy		（必须配置发布，才可执行正确，配置下面有）
+
+3、测试mvn环境
+
+1）连接外网
+2）找个项目，在cmd的工程目录下执行 mvn test。项目下载jar正常。则maven环境正常。
+
+4、测试nexus
+
+1）在C:\Documents and Settings\Administrator\.m2\setting.xml中配置，指向nexus
+
+	<servers>
+		<server>
+			<id>releases</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+		<server>
+			<id>snapshots</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+	</servers>
+
+  <mirrors>
+	 <mirror>
+		 <id>nexus</id>
+		 <mirrorOf>*</mirrorOf>
+		 <url>http://localhost:8010/nexus/content/groups/public/</url>
+	 </mirror>
+
+  </mirrors>
+
+  <profiles>
+	 <profile>
+		 <id>nexus</id>
+		 <repositories>
+			 <repository>
+				 <id>central</id>
+				 <url>http://central</url>
+				 <releases><enabled>true</enabled></releases>
+			 	 <snapshots><enabled>true</enabled></snapshots>
+			 </repository>
+		 </repositories>
+		 <pluginRepositories>
+			 <pluginRepository>
+				 <id>central</id>
+				 <url>http://central</url>
+				 <releases><enabled>true</enabled></releases>
+				 <snapshots><enabled>true</enabled></snapshots>
+			 </pluginRepository>
+		 </pluginRepositories>
+	 </profile>
+  </profiles>
+
+	<activeProfiles>
+		<activeProfile>nexus</activeProfile>
+	</activeProfiles>
+
+
+
+2）项目下执行 mvn test，断开外网，看能否下载jar包
+3）要发布项目到nexus上要在项目中的D:\javaws\jk\pom.xml最后配置
+
+
+
+<distributionManagement> 
+	<repository> 
+	    <id>releases</id> 
+	    <name>Internal Releases</name> 
+	    <url>http://localhost:8010/nexus/content/repositories/releases/</url> 
+	</repository> 
+	<snapshotRepository> 
+	    <id>snapshots</id> 
+	    <name>Internal Snapshots</name> 
+	    <url>http://localhost:8010/nexus/content/repositories/snapshots/</url> 
+	</snapshotRepository> 
+  </distributionManagement>
+
+
+4）执行 mvn clean
+
+	mvn install -X	(必须大写X)
+	mvn deploy
+
+登录 http://localhost:8010/nexus
+
+如deploy无错，查看Repositories/Snapshots就可以看到项目
+
+
+
+
+
+
+

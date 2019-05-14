@@ -1,0 +1,21 @@
+## Jenkins 搭建、部署分为四个步骤；
+####  第一步，Jenkins 安装
+####  第二步，插件安装和配置
+####  第三步，Push SSH
+####  第四步，部署项目
+
+第一步 ，Jenkins 安装
+准备环境：
+JDK:1.8
+Jenkins:2.83
+Centos:7
+maven 3.6
+
+## 安装Jdk 和 maven，具体可以参考jdk和maven安装教程
+
+## 关闭防火墙
+停止： systemctl disable firewalld 
+禁用： systemctl stop firewalld
+
+
+7ca2132b860a49278e689ada0661947d

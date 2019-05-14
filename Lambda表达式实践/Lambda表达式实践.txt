@@ -1,0 +1,47 @@
+List<Player>  players = new ArrayList<Player>() {
+	{
+		 add(new Player("Elsdon", "2017-12-01 10:20:21"));  
+		 add(new Player("Tamsen", "2017-12-01 10:20:22"));  
+		 add(new Player("Floyd", "2017-12-01 10:20:23"));  
+		 add(new Player("Sindy", "2017-12-01 10:20:24"));  
+		 add(new Player("Vere", "2017-12-01 10:20:25"));  
+		 add(new Player("Maude", "2017-12-02 10:20:26"));  
+		 add(new Player("Shawn", "2017-12-01 10:20:27"));  
+		 add(new Player("Jayden", "2017-12-01 10:20:28"));  
+		 add(new Player("Palmer", "2017-12-01 10:20:29"));  
+		 add(new Player("Addison", "2017-12-01 10:20:30"));  
+	}
+	};
+//构建一个List集合 
+//使用lambda表达式对List进行循环
+players.forEach(player -> {
+			System.out.printf("%s %s; ", player.getName(), 			 		    player.getAddress());
+	});
+
+
+//使用lambda排序
+//排序方法 比较player的address字段 如果 a在前面则是升序 b 在前面则//是降序（前后表示红色字母的位置）
+Collections.sort(players, (a, b) -> b.getAddress().compareTo(a.getAddress()));
+
+
+//过滤名字叫Addison的数据,并且按照address的降序排列，并生成一个新的//List集合
+List<Player>  playerss = players.stream().sorted(((a, b) -> b.getAddress().compareTo(a.getAddress())))
+	.filter(a-> !"Addison".equals(a.getName())).collect(Collectors.toList());
+	playerss.forEach(System.out::println);
+
+
+
+
+
+
+
+
+  //对整型的list进行操作	 
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+IntSummaryStatistics stats = numbers.stream().mapToInt((x) -> x).summaryStatistics();
+
+System.out.println("List中最大的数字 : " + stats.getMax());
+System.out.println("List中最小的数字 : " + stats.getMin());
+System.out.println("所有数字的总和   : " + stats.getSum());
+System.out.println("所有数字的平均值 : " + stats.getAverage()); 

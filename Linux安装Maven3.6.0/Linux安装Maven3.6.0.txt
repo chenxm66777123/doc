@@ -1,0 +1,31 @@
+
+====================安装====================
+## 安装目录 /data/application/maven 可以自己确定安装位置
+## 创建安装目录
+mkdir -p /data/application/maven
+
+cd /data/application/maven
+
+## 利用wget下载maven压缩包
+## 没有wget的可先安装wget
+yum -y install wget
+
+## 下载
+wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+
+tar -zvxf apache-maven-3.6.0-bin.tar.gz
+
+mv apache-maven-3.6.0 maven3	
+
+
+====================配置环境变量====================
+## 编辑配置文件
+vi /etc/profile
+export MAVEN_HOME=/data/application/maven/maven3
+export PATH=${PATH}:${MAVEN_HOME}/bin
+
+## 让配置文件生效
+source /etc/profile
+
+## 查看是否安装成功
+mvn -v
